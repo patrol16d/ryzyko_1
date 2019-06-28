@@ -1,0 +1,5 @@
+npm init
+licence: MIT
+npm install express
+npm install -g nodemon
+npm install nedb
