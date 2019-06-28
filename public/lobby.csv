@@ -1,0 +1,24 @@
+<div id="lobby">
+
+	<div style="text-align:right; padding: 0px 40px">
+		<span id="mylogin" style="font-size: 26px; margin-right: 4px;" ></span>
+		
+		
+		<ul id="chose_color">
+			<span id="mycolor" > &block;&block; </span>
+			<li id="c1" style="color: red"> &block;&block; </li>
+			<li id="c2" style="color: blue"> &block;&block; </li>
+			<li id="c3" style="color: yellow"> &block;&block; </li>
+			<li id="c4" style="color: green"> &block;&block; </li>
+		
+		</ul>
+		
+	</div>
+
+	<h1> Lobby </h1>
+	
+	<ul id="rooms">
+		<!-- rooms render by javascript -->
+	</ul>
+
+</div>

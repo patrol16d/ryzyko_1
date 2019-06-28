@@ -1,0 +1,75 @@
+#lobby{
+	width: 1200px;
+	margin-top: 35px;
+}
+#lobby > div{
+	float: left;
+	height: 600px;
+	border: 1px solid #30A9D9;
+	text-align: right;
+}
+#game_board{
+	width: 1000px;
+	height: 600px;
+//	background-image: url('map.png');
+    background-size: 1000px 600px;
+    background-repeat: no-repeat;
+}
+#players{
+	text-align: right;
+	font-size: 26px;
+	padding: 0px;
+	margin: 0px;
+}
+#players > li {
+	padding: 10px;
+}
+#chat{
+	/* border-top: 2px solid #30A9D9; */
+	/* border-bottom: 2px solid #30A9D9; */
+	float: right;
+	width: 196px;
+	padding: 0px;
+	margin: 0px;
+	overflow-x: hidden; 
+	overflow-y: auto;
+//	scroll-behavior: smooth;
+}
+#chat > li{
+	text-align: right;
+	width: 176px;
+	margin: 2px 10px;
+	padding: 0px;
+	
+}
+#chat > li > .h7{
+	font-size: 18px;
+	margin: 0px;
+	padding: 0px 4px;
+	
+}
+#text_message{
+	border: 0px solid #30A9D9;
+	float: left;
+	font-size: 20px;
+	width: 126px;
+	padding: 10px;
+	margin: 0px;
+	background: #034C8C;
+	
+}
+#send_message{
+	border: 1px solid #30A9D9;
+	border-radius: 2px;
+	float: left;
+	font-size: 48px;
+	height: 36px;
+	width: 44px;
+	padding: 0;
+	margin: 3px;
+	background: #30A9D9;
+	
+}
+
+
+

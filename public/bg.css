@@ -1,0 +1,38 @@
+body {
+	margin: 0;
+	overflow: hidden;
+	font-family: 'Calibri', Sans-serif;
+	background-color: #034C8C;
+}
+.ce {
+	width: 100%;
+	text-align: center;
+	position: fixed;
+	top: 0;
+}
+#lobby{
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 35px;
+	padding: 0px;
+}
+li{
+	list-style-type: none;
+	text-decoration: none;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: none; 
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #023E73; 
+  border-radius: 10px;
+}

@@ -1,0 +1,80 @@
+h1{
+	margin-left: 330px;
+	text-align: left;
+	letter-spacing: 1px;
+}
+#chose_color{
+	width: 30px;
+	margin: 5px 0;
+	padding: 0;
+	float: right;
+}
+#chose_color *{
+	margin: 5px;
+}
+#chose_color li{
+	display: none;
+	cursor: pointer;
+}
+#chose_color:hover > li{
+	display: inherit;
+}
+#rooms{
+	margin-left: auto;
+	margin-right: auto;
+	width: 700px;
+	height: 500px;
+	margin: 0;
+	padding: 0 30px;
+	text-align: left;
+	overflow-x: hidden; 
+	overflow-y: auto;
+}
+h2, h3{
+	display: inline-block;
+	width: 200px;
+}
+#rooms > li{
+	margin: 5px 10px;
+	background-color: #023E73;
+	border-radius: 5px;
+	padding: 5px 10px;
+}
+#rooms li ol{
+	display: none;
+}
+#rooms li:hover > ol{
+	display: inherit;
+	list-style-type: none;
+	text-decoration: none;
+}
+#rooms li ol li{
+	font-size: 26px;
+	padding: 5px 0;
+	
+}
+#rooms li ol li span{
+	font-size: 16px;
+	float: right;
+	
+}
+.room_op{
+	padding: 20px 10px;
+	float: right;
+	width: 120px;
+	font-size: 24px;
+	text-align: center;
+}
+.button_join{
+	
+	background-color: #034C8C;
+	font-size:18px;
+	color: white;
+	padding: 5px 10px;
+	margin: 0;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	outline: none;
+	letter-spacing: 1px;
+}

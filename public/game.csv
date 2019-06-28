@@ -1,0 +1,17 @@
+<div id="lobby">
+	<div style="width: 1000px">
+		<canvas id="game_board"></canvas>
+	</div>
+	<div style="width: 196px;">
+		
+		<ul id="players"></ul>
+		
+		<ul id="chat">
+			
+		</ul>
+		<div>
+			<input type="text" id="text_message" autocomplete="off" placeholder="chat" onfocus="this.placeholder='chat'" onblur="this.placeholder='chat'">
+			<input type="submit" value='^' class="send" id="send_message">
+		</div>
+	</div>
+</div>
