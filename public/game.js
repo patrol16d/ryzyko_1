@@ -5,7 +5,7 @@ async function start_game() {
 	
 	document.getElementById('game').innerHTML = response_lobby;
 	
-	let players_html = '<li style="padding: 1px"> </li><li style="padding: 1px"> </li>';
+	let players_html = '';
 	
 	for(let i = 0; i < players.length; i++){
 		if(players[i].login == player.login) player.num = i;
@@ -23,7 +23,6 @@ async function start_game() {
 	function p(x, y) { return {x, y};}
 	
 	let wait = false;
-	let wait_count = 0;;
 	const army_stars = [0, 0, 2, 4, 7, 10, 13, 17, 21, 25, 30];
 	
 	let hover = false;
@@ -36,9 +35,6 @@ async function start_game() {
 	let chat_end = false;
 	let chat_new = 0;
 	let valid = [];
-	let new_card = 0;
-	let new_card_timer = 0;
-	let card = { x: 500, y: 0, size: 0};
 	
 	let board_stars = false;
 	let board_countries = false;
@@ -82,90 +78,99 @@ async function start_game() {
 170:p(888,419),171:p(884,169),172:p(921,157),173:p(461,158),174:p(432,230),175:p(600,395),176:p(598,468),177:p(620,520),178:p(580,534),179:p(898,112),
 180:p(975,38),181:p(1010,38),182:p(1010,-10),183:p(-10,-10),184:p(-10,77)
 	};
+	const colors = {
+	'amN':"rgb(255, 201, 14)",
+	'amS':"rgb(237, 28, 36)",
+	'eu':"rgb(0, 0, 160)",
+	'as':"rgb(34, 177, 76)",
+	'af':"rgb(136, 0, 21)",
+	'au':"rgb(163, 71, 164)"
+	};
 	const countries = [
-{name:{value:"Alaska",place:p(55,84), size:12},border:[1,2,3,8,4],
+	
+{name:{value:"Alaska",place:p(55,84), size:12},continent: "amN",border:[1,2,3,8,4],
 connections:{1:[4,8],3:[8,3],19:[180,181,182,183,184,0]},center:p(73,88),radius:25, player: 0, army: 1},
-{name:{value:"Terytoria Północno-Zachodnie",place:p(118,78), size:12},border:[4,5,6,7,8],
+{name:{value:"Terytoria Północno-Zachodnie",place:p(118,78), size:12},continent: "amN",border:[4,5,6,7,8],
 connections:{0:[4,8],3:[8,7],4:[6,7],2:[141,146]},center:p(169,84),radius:30, player: 0, army: 1},
-{name:{value:"Grenlandia",place:p(295,27), size:16},border:[36,37,38,39,40,41],
+{name:{value:"Grenlandia",place:p(295,27), size:16},continent: "amN",border:[36,37,38,39,40,41],
 connections:{1:[141,146],4:[142,145],5:[143,144],13:[147,148]},center:p(332,46),radius:33, player: 0, army: 1},
-{name:{value:"Alberta",place:p(100,126), size:18},border:[3,8,7,9,10],
+{name:{value:"Alberta",place:p(100,126), size:18},continent: "amN",border:[3,8,7,9,10],
 connections:{0:[3,8],1:[7,8],4:[7,9],6:[9,10]},center:p(131,146),radius:32, player: 0, army: 1},
-{name:{value:"Ontario",place:p(183,136), size:17},border:[7,9,15,16,133,6],
+{name:{value:"Ontario",place:p(183,136), size:17},continent: "amN",border:[7,9,15,16,133,6],
 connections:{1:[6,7],2:[142,145],3:[7,9],5:[133,16],6:[9,15],7:[15,16]},center:p(212,150),radius:32, player: 0, army: 1},
-{name:{value:"Kanada Wschod.",place:p(259,136), size:10},border:[16,17,134,133],
+{name:{value:"Kanada Wschod.",place:p(259,136), size:10},continent: "amN",border:[16,17,134,133],
 connections:{2:[143,144],4:[133,16],7:[16,17]},center:p(273,152),radius:20, player: 0, army: 1},
-{name:{value:"USA Zachodnie",place:p(104,208), size:15},border:[9,10,11,12,13,14,15],
-connections:{3:[9,10],4:[9,15],7:[12,13,14,15],8:[11,12]},center:p(135,229),radius:31, player: 0, army: 1},
-{name:{value:"USA Wschodnie",place:p(188,217), size:13},border:[12,13,14,15,16,17,18,19],
+{name:{value:"USA Zachodnie",place:p(104,208), size:15},continent: "amN",border:[9,10,11,12,13,14,15],
+connections:{3:[9,10],4:[16,17],7:[12,13,14,15],8:[11,12]},center:p(135,229),radius:31, player: 0, army: 1},
+{name:{value:"USA Wschodnie",place:p(188,217), size:13},continent: "amN",border:[12,13,14,15,16,17,18,19],
 connections:{4:[15,16],5:[16,17],6:[12,13,14,15],8:[12,19]},center:p(213,240),radius:32, player: 0, army: 1},
-{name:{value:"Ameryka Środkowa",place:p(110,291), size:10},border:[11,12,19,20,21,22],
+{name:{value:"Ameryka Środkowa",place:p(110,291), size:10},continent: "amN",border:[11,12,19,20,21,22],
 connections:{6:[11,12],7:[12,19],9:[20,21]},center:p(130,307),radius:20, player: 0, army: 1},
-{name:{value:"Wenezuela",place:p(140,354), size:12},border:[20,21,23,24,25],
+{name:{value:"Wenezuela",place:p(140,354), size:12},continent: "amS",border:[20,21,23,24,25],
 connections:{8:[20,21],10:[24,25],11:[23,24]},center:p(170,366),radius:27, player: 0, army: 1},
-{name:{value:"Brazylia",place:p(234,369), size:20},border:[24,25,26,27,28,29,30],
+{name:{value:"Brazylia",place:p(234,369), size:20},continent: "amS",border:[24,25,26,27,28,29,30],
 connections:{9:[24,25],11:[29,30,24],12:[28,29],29:[27,161]},center:p(285,416),radius:38, player: 0, army: 1},
-{name:{value:"Peru",place:p(175,417), size:16},border:[23,24,30,29,33,34,35],
+{name:{value:"Peru",place:p(175,417), size:16},continent: "amS",border:[23,24,30,29,33,34,35],
 connections:{9:[23,24],10:[29,30,24],12:[29,33]},center:p(200,430),radius:30, player: 0, army: 1},
-{name:{value:"Argentyna",place:p(243,510), size:16},border:[29,28,31,32,33],
+{name:{value:"Argentyna",place:p(243,510), size:16},continent: "amS",border:[29,28,31,32,33],
 connections:{10:[28,29],11:[29,33]},center:p(283,540),radius:33, player: 0, army: 1},
-{name:{value:"Islandia",place:p(406,110), size:11},border:[42,43,44,45],
+{name:{value:"Islandia",place:p(406,110), size:11},continent: "eu",border:[42,43,44,45],
 connections:{2:[147,148],14:[149,150],21:[151,152]},center:p(424,117),radius:20, player: 0, army: 1},
-{name:{value:"Skandynawia",place:p(470,114), size:10},border:[50,51,52,53,54,55],
+{name:{value:"Skandynawia",place:p(470,114), size:10},continent: "eu",border:[50,51,52,53,54,55],
 connections:{13:[149,150],15:[50,55],21:[173,153],23:[155,156]},center:p(483,140),radius:20, player: 0, army: 1},
-{name:{value:"Rosja",place:p(573,144), size:26},border:[50,55,56,57,58,59,60,61,62],
+{name:{value:"Rosja",place:p(573,144), size:26},continent: "as",border:[50,55,56,57,58,59,60,61,62],
 connections:{14:[50,55],16:[56,57],23:[61,62],24:[60,61],25:[57,58,59],32:[59,60]},center:p(594,178),radius:50, player: 0, army: 1},
-{name:{value:"Ural",place:p(689,114), size:18},border:[56,57,103,102,104],
+{name:{value:"Ural",place:p(689,114), size:18},continent: "as",border:[56,57,103,102,104],
 connections:{15:[56,57],17:[102,104],25:[57,103],26:[102,103]},center:p(706,136),radius:26, player: 0, army: 1},
-{name:{value:"Syberia",place:p(739,95), size:14},border:[101,102,104,105,113,114],
+{name:{value:"Syberia",place:p(739,95), size:14},continent: "as",border:[101,102,104,105,113,114],
 connections:{16:[102,104],18:[105,113],20:[113,114],26:[101,102],27:[101,114]},center:p(760,117),radius:26, player: 0, army: 1},
-{name:{value:"Jakuck",place:p(810,48), size:16},border:[105,106,112,113],
+{name:{value:"Jakuck",place:p(810,48), size:16},continent: "as",border:[105,106,112,113],
 connections:{17:[105,113],19:[106,112],20:[112,113]},center:p(835,58),radius:20, player: 0, army: 1},
-{name:{value:"Kamczatka",place:p(888,44), size:16},border:[106,107,108,109,110,111,112],
+{name:{value:"Kamczatka",place:p(888,44), size:16},continent: "as",border:[106,107,108,109,110,111,112],
 connections:{0:[180,181,182,183,184,0],18:[106,112],20:[111,112],27:[110,111],28:[172,179]},center:p(916,54),radius:28, player: 0, army: 1},
-{name:{value:"Irkuck",place:p(809,100), size:17},border:[111,112,113,114],
+{name:{value:"Irkuck",place:p(809,100), size:17},continent: "as",border:[111,112,113,114],
 connections:{17:[113,114],18:[112,113],19:[111,112],27:[111,114]},center:p(829,108),radius:24, player: 0, army: 1},
-{name:{value:"Wielka Brytania",place:p(403,169), size:9},border:[46,47,48,49],
+{name:{value:"Wielka Brytania",place:p(403,169), size:9},continent: "eu",border:[46,47,48,49],
 connections:{13:[151,152],14:[153,173],22:[154,174],23:[153,156]},center:p(419,182),radius:18, player: 0, army: 1},
-{name:{value:"Europa Zachodnia",place:p(419,254), size:10},border:[63,64,65,66,67,68,69],
+{name:{value:"Europa Zachodnia",place:p(419,254), size:10},continent: "eu",border:[63,64,65,66,67,68,69],
 connections:{21:[154,174],23:[63,69],24:[68,69],29:[65,66]},center:p(446,281),radius:26, player: 0, army: 1},
-{name:{value:"Europa Północna",place:p(473,220), size:10},border:[61,62,63,69],
+{name:{value:"Europa Północna",place:p(473,220), size:10},continent: "eu",border:[61,62,63,69],
 connections:{14:[155,156],15:[61,62],21:[153,156],22:[63,69],24:[61,69]},center:p(501,222),radius:20, player: 0, army: 1},
-{name:{value:"Europa Południowa",place:p(480,260), size:10},border:[60,61,69,68,135],
+{name:{value:"Europa Południowa",place:p(480,260), size:10},continent: "eu",border:[60,61,69,68,135],
 connections:{15:[60,61],22:[68,69],23:[61,69],29:[157,160],30:[158,159],32:[60,135]},center:p(510,264),radius:20, player: 0, army: 1},
-{name:{value:"Afganistan",place:p(658,205), size:15},border:[57,58,59,89,90,103],
+{name:{value:"Afganistan",place:p(658,205), size:15},continent: "as",border:[57,58,59,89,90,103],
 connections:{15:[57,58,59],16:[57,103],26:[90,103],32:[59,89],33:[89,90]},center:p(691,222),radius:31, player: 0, army: 1},
-{name:{value:"Chiny",place:p(780,211), size:20},border:[90,91,96,97,98,99,100,101,102,103],
+{name:{value:"Chiny",place:p(780,211), size:20},continent: "as",border:[90,91,96,97,98,99,100,101,102,103],
 connections:{16:[102,103,],17:[101,102],25:[90,103],27:[99,100,101],33:[90,91],34:[91,96]},center:p(801,227),radius:35, player: 0, army: 1},
-{name:{value:"Mongolia",place:p(800,148), size:15},border:[99,100,101,101,114,111,110],
+{name:{value:"Mongolia",place:p(800,148), size:15},continent: "as",border:[99,100,101,101,114,111,110],
 connections:{17:[101,114],19:[110,111],20:[111,114],26:[99,100,101],28:[171,172]},center:p(831,161),radius:28, player: 0, army: 1},
-{name:{value:"Japonia",place:p(926,135), size:9},border:[115,116,117,118],
+{name:{value:"Japonia",place:p(926,135), size:9},continent: "as",border:[115,116,117,118],
 connections:{19:[172,179],27:[171,172]},center:p(936,160),radius:16, player: 0, army: 1},
-{name:{value:"Afryka Północna",place:p(458,383), size:17},border:[65,66,70,74,75,76,83,84,85],
+{name:{value:"Afryka Północna",place:p(458,383), size:17},continent: "af",border:[65,66,70,74,75,76,83,84,85],
 connections:{10:[27,161],22:[65,66],24:[157,160],30:[70,74,75],31:[75,76],35:[76,83]},center:p(487,404),radius:40, player: 0, army: 1},
-{name:{value:"Egipt",place:p(514,342), size:16},border:[70,74,75,136,73,72],
+{name:{value:"Egipt",place:p(514,342), size:16},continent: "af",border:[70,74,75,136,73,72],
 connections:{24:[158,159],29:[70,74,75],31:[75,136],32:[72,73]},center:p(541,342),radius:20, player: 0, army: 1},
-{name:{value:"Afryka Wschodnia",place:p(552,414), size:11},border:[75,76,77,78,79,136],
+{name:{value:"Afryka Wschodnia",place:p(552,414), size:11},continent: "af",border:[75,76,77,78,79,136],
 connections:{29:[75,76],30:[75,136],32:[175,162],35:[76,77],36:[77,78],37:[176,177]},center:p(579,445),radius:24, player: 0, army: 1},
-{name:{value:"Środkowy Wschód",place:p(588,281), size:15},border:[59,60,135,71,72,73,86,87,88,89],
+{name:{value:"Środkowy Wschód",place:p(588,281), size:15},continent: "as",border:[59,60,135,71,72,73,86,87,88,89],
 connections:{15:[59,60],24:[60,135],25:[59,89],30:[72,73],31:[175,162],33:[88,89]},center:p(618,319),radius:36, player: 0, army: 1},
-{name:{value:"Indie",place:p(700,285), size:16},border:[88,89,90,91,92,93],
+{name:{value:"Indie",place:p(700,285), size:16},continent: "as",border:[88,89,90,91,92,93],
 connections:{25:[89,90],26:[90,91],32:[88,89],34:[91,92]},center:p(717,304),radius:34, player: 0, army: 1},
-{name:{value:"Azja Południowo- Wschodnia",place:p(799,296), size:12},border:[91,92,94,95,96,],
+{name:{value:"Azja Południowo- Wschodnia",place:p(799,296), size:12},continent: "as",border:[91,92,94,95,96,],
 connections:{26:[91,96],33:[91,92],38:[163,164]},center:p(829,313),radius:30, player: 0, army: 1},
-{name:{value:"Afryka Środkowa",place:p(494,467), size:12},border:[76,77,82,83],
+{name:{value:"Afryka Środkowa",place:p(494,467), size:12},continent: "af",border:[76,77,82,83],
 connections:{29:[76,83],31:[76,77],36:[77,82]},center:p(521,478),radius:26, player: 0, army: 1},
-{name:{value:"Afryka Południowa",place:p(501,528), size:14},border:[77,78,80,81,82],
+{name:{value:"Afryka Południowa",place:p(501,528), size:14},continent: "af",border:[77,78,80,81,82],
 connections:{31:[77,78],35:[77,82],37:[177,178]},center:p(539,537),radius:24, player: 0, army: 1},
-{name:{value:"Mada- gaskar",place:p(622,507), size:9},border:[137,138,139,140],
+{name:{value:"Mada- gaskar",place:p(622,507), size:9},continent: "af",border:[137,138,139,140],
 connections:{31:[176,177],36:[177,178]},center:p(635,523),radius:18, player: 0, army: 1},
-{name:{value:"Indonezja",place:p(814,419), size:10},border:[119,120,121,122],
+{name:{value:"Indonezja",place:p(814,419), size:10},continent: "au",border:[119,120,121,122],
 connections:{34:[163,164],39:[165,170],40:[166,167]},center:p(835,432),radius:21, player: 0, army: 1},
-{name:{value:"Nowa Gwinea",place:p(897,416), size:11},border:[123,124,125,126],
+{name:{value:"Nowa Gwinea",place:p(897,416), size:11},continent: "au",border:[123,124,125,126],
 connections:{38:[165,170],41:[168,169]},center:p(914,420),radius:16, player: 0, army: 1},
-{name:{value:"Australia Zachodnia",place:p(819,513), size:11},border:[127,128,129,130],
-connections:{38:[166,167],41:[127,130]},center:p(845,525),radius:27, player: 0, army: 1},
-{name:{value:"Australia Wschodnia",place:p(877,500), size:11},border:[127,130,131,132],
+{name:{value:"Australia Zachodnia",place:p(819,513), size:11},continent: "au",border:[127,128,129,130],
+connections:{38:[166,167],41:[126,130]},center:p(845,525),radius:27, player: 0, army: 1},
+{name:{value:"Australia Wschodnia",place:p(877,500), size:11},continent: "au",border:[127,130,131,132],
 connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, army: 1}
 
 ];
@@ -190,116 +195,69 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 		[171,172,179],
 		[180,181,182,183,184,0]
 	];
-	const continents = [
-		{name: {value: 'Ameryka Północna', place: p(5,275), size: 94, font: 14}, 
-		color: 'rgb(255, 201, 14)', player: undefined, army: 5, countries: [0,1,2,3,4,5,6,7,8]},
-		{name: {value: 'Ameryka Południowa', place: p(90,490), size: 115, font: 15}, 
-		color: 'rgb(237, 28, 36)', player: undefined, army: 3, countries: [9,10,11,12]},
-		{name: {value: 'Europa', place: p(300,210), size: 90, font: 18}, 
-		color: 'rgb(0, 0, 160)', player: undefined, army: 5, countries: [13,14,21,22,23,24]},
-		{name: {value: 'Afryka', place: p(390,476), size: 85, font: 20}, 
-		color: 'rgb(136, 0, 21)', player: undefined, army: 3, countries: [29,30,31,35,36,37]},
-		{name: {value: 'Azja', place: p(905,255), size: 70, font: 20}, 
-		color: 'rgb(34, 177, 76)', player: undefined, army: 7, countries: [15,16,17,18,19,20,25,26,27,28,32,33,34]},
-		{name: {value: 'Australia', place: p(875,360), size: 90, font: 17}, 
-		color: 'rgb(163, 71, 164)', player: undefined, army: 2, countries: [38,39,40,41]}
-	];
-	for(continent of continents) for(country of continent.countries) countries[country].color = continent.color;
 	
 	let timer = 0;
 	let timer_end = 1;
 	let timer_step = 0.01;
 	
 	
-	const game_setInterval = await setInterval(async () => {
-		if(wait) wait_count++;
-		else wait_count = 0;
+	await setInterval(async () => {
 		timer = 0;
 		//console.log("setInterval");
-		
-		const response = await fetch('/getLobbyList');
-		const data = await response.json();
-		
-		for (item of data)if(item.login == player.login) end_game = item.ingame;
-		
-		
-		if(!end_game){
-			att_count = 0;
-			end_attack = false;
-			move_army = 0;
-			move_all_army = false;
-			valid = [];
-			take_card = false;
-			take_board_countries = false;
-			wait = false;
-			clearInterval(game_setInterval);
-			start_lobby();
-			return;
-		}
-		else{
-			try{
-				const response_fetch_game = await fetch(`/game/${player.room}`);
-				const r_game = await response_fetch_game.json();
-				dice = await r_game.dice;
-				battle = await r_game.battle;
-				players = await r_game.players;
-				const num = player.num;
-				player = players[player.num];
-				player.num = num;
+		try{
+			const response_fetch_game = await fetch(`game/${player.room}`);
+			const r_game = await response_fetch_game.json();
+			dice = await r_game.dice;
+			battle = await r_game.battle;
+			players = await r_game.players;
+			const num = player.num;
+			player = players[player.num];
+			player.num = num;
+			
+			if(round == player.num && battle.attack !== false && countries[battle.attack].player != r_game.countries[battle.attack].player && r_game.countries[battle.attack].army > 1) back_army = true;
+			
+			for(let h = 0; h < 42; h++){
+				if(round == player.num && countries[h].player != r_game.countries[h].player) take_card = true;
 				
-				if(round == player.num && battle.attack !== false && countries[battle.attack].player != r_game.countries[battle.attack].player && r_game.countries[battle.attack].army > 1) back_army = true;
+				countries[h].player = await r_game.countries[h].player;
+				countries[h].army = await r_game.countries[h].army;
 				
-				for(let h = 0; h < 42; h++){
-					if(round == player.num && countries[h].player != r_game.countries[h].player) take_card = true;
+			}
+			if(round != await r_game.round || round == 100){
+				round = await r_game.round;
+				for(let i = 0; i < players.length; i++) document.getElementById('round'+i).innerHTML = '';
+				document.getElementById('round'+round).innerHTML = '->';
+			}
+			if(chat.length != r_game.chat.length){
+				chat = r_game.chat;
+				let chat_html = `<span style="color: #000; font-size: 26;">---------Gra się rozpoczęła-------</span>`;
+				for(message of chat){
 					
-					countries[h].player = await r_game.countries[h].player;
-					countries[h].army = await r_game.countries[h].army;
-					
+					if(message.fun == 'throw_a_dice') chat_html += `<li style="background: rgba(50,50,50,0.3)">`;
+					else chat_html += `<li>`;
+					chat_html += `<span class="h7">
+						${players[message.player].login}
+						<span style="color: ${players[message.player].color}; font-size: 14px;" > ██ </span>
+					</span><br>`;
+					chat_html += `${message.value}`;
+					chat_html += `</li>`;
 				}
-				
-				for(continent of continents) continent.player = undefined;
-				for(continent of continents){
-					let test_countries = true;
-					for(country of continent.countries) if(countries[country].player != countries[continent.countries[0]].player) test_countries = false;
-					if(test_countries) continent.player = countries[continent.countries[0]].player;
+				let test = true;
+				const chat_el = document.getElementById('chat');
+			//	chat_el.style.scroll-behavior = 'auto';
+				const test1 = chat_el.scrollTop;
+				chat_el.scroll(0, chat_el.scrollHeight);
+				if(test1 != chat_el.scrollTop){
+				//	chat_new++;
+					test = false;
+					chat_el.scroll(0, test1);
 				}
-				
-				if(round != await r_game.round || round == 100){
-					round = await r_game.round;
-					for(let i = 0; i < players.length; i++) document.getElementById('round'+i).innerHTML = '';
-					document.getElementById('round'+round).innerHTML = '->';
-				}
-				if(chat.length != r_game.chat.length){
-					chat = r_game.chat;
-					let chat_html = `<span style="color: #000; font-size: 26;">---------Gra się rozpoczęła-------</span>`;
-					for(message of chat){
-						
-						if(message.fun == 'throw_a_dice') chat_html += `<li style="background: rgba(50,50,50,0.3)">`;
-						else chat_html += `<li>`;
-						chat_html += `<span class="h7">
-							${players[message.player].login}
-							<span style="color: ${players[message.player].color}; font-size: 14px;" > ██ </span>
-						</span><br>`;
-						chat_html += `${message.value}`;
-						chat_html += `</li>`;
-					}
-					let test = true;
-					const chat_el = document.getElementById('chat');
-				//	chat_el.style.scroll-behavior = 'auto';
-					const test1 = chat_el.scrollTop;
-					chat_el.scroll(0, chat_el.scrollHeight);
-					if(test1 != chat_el.scrollTop){
-					//	chat_new++;
-						test = false;
-						chat_el.scroll(0, test1);
-					}
-					chat_el.innerHTML = chat_html;
-					if(test) chat_el.scroll(0, chat_el.scrollHeight);
-				//	chat_el.style.scroll-behavior = 'smooth';
-				}
-				
-			}catch(er){ console.log("setInterval error",er) }
-		}
+				chat_el.innerHTML = chat_html;
+				if(test) chat_el.scroll(0, chat_el.scrollHeight);
+			//	chat_el.style.scroll-behavior = 'smooth';
+			}
+			
+		}catch(er){ console.log("setInterval error",er) }
 	},timer_end*1000);
 	setInterval(() => {timer++;},timer_step*1000);
 	
@@ -400,15 +358,14 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 		}
 		if(mouse.x < 40 && mouse.y > 570) board_stars = true;
 		else if(mouse.x < 40 && mouse.y > 540) board_countries = true;
-		else if(mouse.x > 920 && mouse.y > 580){
-			can.style.cursor = "pointer";
-			stage = 9;
-		}
+		
 	}
 	
 	can.addEventListener("mousemove", (event) => {
 		mouse = {x: event.layerX, y: event.layerY};
+		
 		mousemove();
+		
 	});
 	
 	can.addEventListener("click", async (event) => {
@@ -456,7 +413,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 						else wait = false;
 					}
 				}
-				if(stage == 3){
+				else if(stage == 3){
 					if(battle.defense === hover) hover = false;
 					const game_change_fetch = await fetch(`/game_change/${player.room},${hover},battle.defense`);
 					const game_change = await game_change_fetch.json();
@@ -483,10 +440,8 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 						}
 					}
 					if(move_army > 0){
-						let game_change_fetch_url = `/game_change/${player.room},${move_army},back_army`
 						if(!back_army) end_attack = true;
-						if(end_attack) game_change_fetch_url += `,end_attack`
-						const game_change_fetch = await fetch(game_change_fetch_url);
+						const game_change_fetch = await fetch(`/game_change/${player.room},${move_army},back_army`);
 						const game_change = await game_change_fetch.json();
 						if(game_change.status == 'succcess'){
 							countries[battle.attack].army = game_change.countries[battle.attack].army;
@@ -512,7 +467,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					const game_change_fetch = await fetch(`/game_change/${player.room},${army_add},add_army,${player.login}`);
 					const game_change = await game_change_fetch.json();
 					if(game_change.status == 'succcess'){
-						player.army = army_add;
 						take_board_countries = true;
 						end_attack = true;
 						wait = false;
@@ -526,8 +480,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					else if(round1 > 2) round1 = 0;
 					let next_player = players[round1];
 					let next_player_army = army_stars[next_player.stars];
-					for(continent of continents) if(continent.player === round1) next_player_army += continent.army;
-					
 					const game_change_fetch = await fetch(`/end_round/${player.room},${take_card},${player.login},${next_player.login},${next_player_army},${round1}`);
 					const game_change = await game_change_fetch.json();
 					if(game_change.status == 'succcess'){
@@ -542,16 +494,14 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 						take_card = false;
 						take_board_countries = false;
 						wait = false;
-						new_card = game_change.card;
 					}
 					
 				}
-				
 				back_army = false;
 			}
 			else if(stage == 8){
 				let def_count = countries[battle.defense].army;
-				if(def_count > 2) def_count = 2;
+				if(def_count > 2) def_count = 0;
 				const game_change_fetch = await fetch(`/game_change/${player.room},${def_count},throw_a_dice1,${player.num}`);
 				const game_change = await game_change_fetch.json();
 				if(game_change.status == 'succcess'){
@@ -563,8 +513,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 			mousemove();
 		}
 		else{ console.log("wait - lag error"); }
-		
-		if(stage == 9) game_change_fetch = await fetch(`/end_game/${player.room}`);
 	});
 	
 	const send_message = document.getElementById('send_message');
@@ -667,7 +615,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 		ctx.fill();
 		
 		ctx.beginPath();
-		ctx.fillStyle = '#fff';
+		ctx.fillStyle = "#fff";
 		switch (num){
 			case 1:
 				ctx.arc(x, y, r, 0, 2*Math.PI);
@@ -767,27 +715,28 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 		ctx.clearRect(0, 0, can.width, can.height);
 		if(round != 100){
 			board_countries_count = 0;
+			ctx.font = "normal 10px Arial";
+			ctx.fillStyle = "#FFF";
+			ctx.fillText("██",40*timer*timer_step/timer_end, 10);
+			ctx.fillText("|",54, 10);
 			
-			ctx.font = 'normal 10px Arial';
-			ctx.fillStyle = '#FFF';
-			if(wait && wait_count > 2) ctx.fillText("Błąd: odświerz stronę", 5, 10);
-			// ctx.fillText("██",40*timer*timer_step/timer_end, 10);
-			// ctx.fillText("|",54, 10);
+			ctx.fillText("X: " + mouse.x, 2, 30);
+			ctx.fillText("Y: " + mouse.y, 2, 40);
+			ctx.fillText("wait: " + wait, 2, 60);
+			ctx.fillText("round: " + round, 2, 70);
 			
-			// ctx.fillText("X: " + mouse.x, 2, 30);
-			// ctx.fillText("Y: " + mouse.y, 2, 40);
-			// ctx.fillText("wait: " + wait, 2, 60);
-			// ctx.fillText("round: " + round, 2, 70);
+			ctx.fillText("take_card: " + take_card, 2, 210);
+			ctx.fillText("e_a: " + end_attack, 2, 220);
+			ctx.fillText("back_army: " + back_army, 2, 230);
+			ctx.fillText("stage: " + stage, 2, 250);
+			ctx.fillText("hover: " + hover, 2, 260);
 			
-			// ctx.fillText("take_card: " + take_card, 2, 210);
-			// ctx.fillText("e_a: " + end_attack, 2, 220);
-			// ctx.fillText("back_army: " + back_army, 2, 230);
-			// ctx.fillText("stage: " + stage, 2, 250);
-			// ctx.fillText("hover: " + hover, 2, 260);
+			ctx.fillText("b.attack: " + battle.attack, 2, 280);
+			ctx.fillText("b.defense: " + battle.defense, 2, 290);
+			ctx.fillText("stars: " + player.stars, 2, 300);
 			
-			// ctx.fillText("b.attack: " + battle.attack, 2, 280);
-			// ctx.fillText("b.defense: " + battle.defense, 2, 290);
-			// ctx.fillText("stars: " + player.stars, 2, 200);
+			
+			
 			
 			for(bridge of bridges){
 				try{
@@ -812,10 +761,10 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					ctx.moveTo(points[country.border[country.border.length-1]].x, 
 					points[country.border[country.border.length-1]].y);
 					for(point of country.border) ctx.lineTo(points[point].x, points[point].y);
-					ctx.fillStyle = country.color;
+					ctx.fillStyle = colors[country.continent];
 					ctx.fill();
 					ctx.font = "normal "+country.name.size+"px Arial";
-					ctx.fillStyle = '#FFF';
+					ctx.fillStyle = "#FFF";
 					for(let h = 0; h < name.length; h++) 
 						ctx.fillText(name[h], country.name.place.x, country.name.place.y + country.name.size*h);
 					ctx.strokeStyle = '#000';
@@ -1071,37 +1020,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				}
 			}
 			
-			for(continent of continents){
-				const name = continent.name;
-				const name_v = name.value.split(' ');
-				ctx.beginPath();
-				ctx.rect(name.place.x, name.place.y, name.size, name_v.length*name.font + 10);
-				ctx.fillStyle = continent.color;
-				ctx.fill();
-				if(continent.player != undefined){
-					ctx.strokeStyle = players[continent.player].color;
-					ctx.globalAlpha = 0.5;
-					ctx.lineWidth = 5;
-					ctx.stroke();
-					ctx.globalAlpha = 1;
-					ctx.lineWidth = 2;
-					ctx.stroke();
-				}
-				else{
-					ctx.strokeStyle = '#333';
-					ctx.lineWidth = 2;
-					ctx.stroke();
-				}
-				ctx.font = "normal "+name.font+"px Arial";
-				ctx.fillStyle = '#FFF';
-				for(let h = 0; h < name_v.length; h++) 
-						ctx.fillText(name_v[h], name.place.x + 5, name.place.y + 2 + name.font*(h+1));
-					
-				ctx.font = "normal "+name.font*name_v.length+"px Arial";
-				ctx.fillText(continent.army, name.place.x + name.size - name.font*name_v.length*0.8, name.place.y + 2 + name.font*name_v.length);
-				
-			}
-			
 			if(hover || hover === 0){
 				ctx.beginPath();
 				ctx.moveTo(points[countries[hover].border[countries[hover].border.length-1]].x, 
@@ -1124,7 +1042,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				ctx.stroke();
 				
 				ctx.font = "normal 16px Arial";
-				ctx.fillStyle = '#FFF';
+				ctx.fillStyle = "#FFF";
 				if(round != player.num) ctx.fillText(players[round].login+" rozkłada wojsko", 455, 18);
 				else ctx.fillText("Rozłóż wojsko", 455, 18);
 				ctx.fillText("Zostało: "+players[round].army, 455, 35);
@@ -1166,7 +1084,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					}
 				}
 				else{
-					ctx.fillStyle = '#FFF';
+					ctx.fillStyle = "#FFF";
 					
 					const name = countries[battle.attack].name.value.split(' ');
 					
@@ -1240,7 +1158,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					ctx.stroke();
 					
 					ctx.font = "normal 16px Arial";
-					ctx.fillStyle = '#FFF';
+					ctx.fillStyle = "#FFF";
 					
 					if(dice.attack.length > 0){
 						if(dice.defense.length == 0) {
@@ -1252,7 +1170,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 								ctx.rect(578, 13, 100, 25);
 								ctx.fill();
 								ctx.stroke();
-								ctx.fillStyle = '#FFF';
+								ctx.fillStyle = "#FFF";
 								ctx.font = "normal 16px Arial";
 								ctx.fillText("Rzuć", 605, 32);
 							}
@@ -1313,7 +1231,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 							ctx.strokeStyle = '#f00';
 							ctx.stroke();
 							ctx.font = "normal 16px Arial";
-							ctx.fillStyle = '#FFF';
+							ctx.fillStyle = "#FFF";
 							ctx.fillText("Atak", 716, 18);
 							
 							ctx.beginPath();
@@ -1357,7 +1275,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 									ctx.stroke();
 								}
 								
-								ctx.fillStyle = '#FFF';
+								ctx.fillStyle = "#FFF";
 								ctx.font = "normal 14px Arial";
 								ctx.fillText("Wróć wojska", 720, 40);
 							}
@@ -1374,7 +1292,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 									ctx.stroke();
 								}
 								
-								ctx.fillStyle = '#FFF';
+								ctx.fillStyle = "#FFF";
 								ctx.font = "normal 13px Arial";
 								ctx.fillText("Przenieś wojska", 712, 18);
 								
@@ -1399,7 +1317,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				ctx.lineWidth = 3;
 				ctx.stroke();
 				
-				ctx.fillStyle = '#FFF';
+				ctx.fillStyle = "#FFF";
 				ctx.font = "normal 16px Arial";
 				if(!take_board_countries && board_countries_count > 11){
 					
@@ -1415,16 +1333,16 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					else if(board_countries_count < 40) army_add = 9;
 					else army_add = 10;
 					
-					ctx.fillText("Dobierz wojsko za pola: " + army_add, 443, 32);
+					ctx.fillText("Dobierz wojsko za pola: " + army_add, 446, 30);
 				}
 				else{
-					ctx.font = "normal 18px Arial";
-					if(take_card) ctx.fillText("Weź karte", 484, 32);
-					else ctx.fillText("Następna kolejka", 464, 32);
+					if(take_card) ctx.fillText("Weź karte", 455, 30);
+					else ctx.fillText("Następna kolejka", 455, 30);
 				}
 			}
 			
 			if(hover || hover === 0){
+				
 				//info
 				ctx.beginPath();
 				ctx.rect(mouse.x, mouse.y-70, 140, 70);
@@ -1435,7 +1353,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				ctx.stroke();
 				
 				ctx.font = "normal 16px Arial";
-				ctx.fillStyle = '#FFF';
+				ctx.fillStyle = "#FFF";
 				
 				const name = countries[hover].name.value.split(' ');
 				for(let h = 0; h < name.length; h++) 
@@ -1453,8 +1371,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 			let c2 = '#aaa';
 			let c3 = '#333';
 			let c4 = '#aaa';
-			let c5 = '#333';
-			let c6 = '#aaa';
 			
 			ctx.font = "normal 16px Arial";
 			ctx.strokeStyle = '#222';
@@ -1470,19 +1386,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				ctx.stroke();
 				
 				const army_countries = ['12-14', '15-17', '18-20', '21-23', '24-26', '27-29', '30-32','33-35', '36-39', '40-42'];
-				let army_add = 0;
-				if(board_countries_count > 11){
-					if(board_countries_count < 15) army_add = 1;
-					else if(board_countries_count < 18) army_add = 2;
-					else if(board_countries_count < 21) army_add = 3;
-					else if(board_countries_count < 24) army_add = 4;
-					else if(board_countries_count < 27) army_add = 5;
-					else if(board_countries_count < 30) army_add = 6;
-					else if(board_countries_count < 33) army_add = 7;
-					else if(board_countries_count < 36) army_add = 8;
-					else if(board_countries_count < 40) army_add = 9;
-					else army_add = 10;
-				}
 				for(let i = 0; i < 10; i++){
 					ctx.beginPath();
 					for(let h = 0; h < 2; h++){
@@ -1493,23 +1396,19 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 					ctx.fill();
 					ctx.stroke();
 				}
-				ctx.fillStyle = '#fff';
-				ctx.font = "normal 15px Arial";
-				ctx.fillText("Zajęte pola: " + board_countries_count, 43, 556);
-				
 				ctx.font = "normal 13px Arial";
+				ctx.fillStyle = '#fff';
 				for(let h = 0; h < 10; h++){
-					ctx.fillStyle = '#fff';
 					if(h < 9) ctx.fillText(h+1, 51+30*h, 595, 30, 20);
 					else ctx.fillText(h+1, 47+30*h, 595, 30, 20);
 					
 					ctx.font = "normal 10px Arial";
-					if(army_add > h) ctx.fillStyle = 'yellow';
-					else ctx.fillStyle = '#fff';
 					ctx.fillText(army_countries[h], 42+30*h, 573, 30, 20);
 					ctx.font = "normal 16px Arial";
 				}
 				
+				ctx.font = "normal 15px Arial";
+				ctx.fillText("Zajęte pola: " + board_countries_count, 43, 556);
 			}
 			else if(board_stars){
 				c3 = '#555';
@@ -1534,7 +1433,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				
 				for(let h = 0; h < 3; h++)draw_star(10, '#aaa', 55+60*h, 528);
 				ctx.font = "normal 13px Arial";
-				ctx.fillStyle = '#FFF';
+				ctx.fillStyle = "#FFF";
 				for(let h = 0; h < 3; h++) ctx.fillText("Woj", 74+60*h, 533);
 				let count = 2;
 				for(let h = 0; h < 3; h++){
@@ -1542,7 +1441,7 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 						if(count <= player.stars) ctx.fillStyle = "yellow";
 						if(count < 10) ctx.fillText(count, 51+60*h, 555+20*i, 30, 20);
 						else ctx.fillText(10, 47+60*2, 555+20*2, 30, 20);
-						if(count <= player.stars) ctx.fillStyle = '#FFF';
+						if(count <= player.stars) ctx.fillStyle = "#FFF";
 						
 						if(count < 5) ctx.fillText(army_stars[count], 80+60*h, 555+20*i, 30, 20);
 						else ctx.fillText(army_stars[count], 75+60*h, 555+20*i, 30, 20);
@@ -1551,11 +1450,6 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 				}
 				
 			}
-			else if(stage == 9){
-				c5 = '#555';
-				c6 = '#000';
-			}
-			
 			ctx.beginPath();
 			ctx.rect(0, 540, 40, 30);
 			ctx.fillStyle = c1;
@@ -1577,69 +1471,13 @@ connections:{39:[168,169],40:[126,130]},center:p(904,515),radius:26, player: 0, 
 			ctx.fill();
 			ctx.stroke();
 			draw_star(13, c4, 20, 586);
-			
-			
-			ctx.beginPath();
-			ctx.rect(920, 580, 80, 20);
-			ctx.fillStyle = c5;
-			ctx.fill();
-			ctx.stroke();
-			ctx.font = "normal 13px Arial";
-			ctx.fillStyle = c6;
-			ctx.fillText("Zakończ gre", 925, 595);
-			
-			if(new_card > 0){
-				new_card_timer++;
-				ctx.beginPath();
-				ctx.rect(card.x-card.size*0.5, card.y-card.size*1.6*0.5, card.size, card.size*1.6);
-				ctx.fillStyle = '#034C8C';
-				ctx.fill();
-				ctx.strokeStyle = '#333';
-				ctx.lineWidth = 3;
-				ctx.stroke();
-				
-				if(new_card == 1) draw_star(card.size*0.3, 'yellow', card.x, card.y);
-				if(new_card == 2){
-					draw_star(card.size*0.2, 'yellow', card.x+card.size*0.22, card.y);
-					draw_star(card.size*0.2, 'yellow', card.x-card.size*0.22, card.y);
-				}
-				if(new_card_timer < 75){
-					card.y+=4;
-					card.size++;
-				}
-				else if(new_card_timer > 80 && new_card_timer < 150){
-					card.y+=4;
-					card.size--;
-					card.x-=6.7;
-				}
-				else if(new_card_timer > 150){
-					draw_star(13, 'yellow', 20, 586);
-					
-					ctx.strokeStyle = '#fff';
-					ctx.lineWidth = 2-Math.abs(152-new_card_timer);
-					ctx.stroke();
-					
-				}
-				if(new_card_timer == 153){
-					new_card = 0;
-					new_card_timer = 0;
-					card = { x: 500, y: 0, size: 0};
-				}
-			}
-			
 		}else{
 			ctx.beginPath();
-			ctx.arc(can.width*0.1, can.height*0.8, can.width*0.02, 0.5*Math.PI, 1.5*Math.PI);
-			ctx.arc(can.width*0.1 + can.width*0.8*timer*timer_step/timer_end, can.height*0.8, can.width*0.02, 1.5*Math.PI, 0.5*Math.PI);
+			ctx.arc(can.width*0.1, can.height*0.7, can.width*0.02, 0.5*Math.PI, 1.5*Math.PI);
+			ctx.arc(can.width*0.1 + can.width*0.8*timer*timer_step/timer_end, can.height*0.7, can.width*0.02, 1.5*Math.PI, 0.5*Math.PI);
 			ctx.fillStyle = '#0f0';
 			ctx.fill();
-			ctx.font = "normal "+can.height*0.6+"px Calibri";
-			// ctx.fillStyle = 'rgb(186, 0, 21)';
-			ctx.fillStyle = '#ccc';
-			ctx.fillText("Ryzyko", can.width*0.1, can.height*0.6, can.width*0.8, can.height*0.4);
 		}
 	}
 	animate();
 }
-
-

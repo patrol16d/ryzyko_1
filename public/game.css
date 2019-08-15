@@ -25,8 +25,8 @@
 	padding: 10px;
 }
 #chat{
-	/* border-top: 2px solid #30A9D9; */
-	/* border-bottom: 2px solid #30A9D9; */
+	border-top: 2px solid #30A9D9;
+	border-bottom: 2px solid #30A9D9;
 	float: right;
 	width: 196px;
 	padding: 0px;
